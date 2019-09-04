@@ -17,7 +17,7 @@ namespace Abp.Runtime.Caching.Redis.InMemory
         private IIocManager IocManager { get; set; }
     
         public AbpRedisInMemoryCacheManager(IIocManager iocManager, 
-                    ICachingConfiguration configuration) : base(iocManager, configuration)
+                    ICachingConfiguration configuration) : base(configuration)
         {
             Logger = NullLogger.Instance;
             _options = iocManager.Resolve<AbpRedisCacheOptions>();
