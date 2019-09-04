@@ -125,15 +125,9 @@ namespace Abp.Authorization.Users
                 user.TenantId = tenantId.Value;
             }
 
-            var isLockoutEnabled = user.IsLockoutEnabled;
+            await InitializeOptionsAsync(user.TenantId);
 
-            var identityResult = await base.CreateAsync(user);
-            if (identityResult.Succeeded)
-            {
-                await SetLockoutEnabledAsync(user, isLockoutEnabled);
-            }
-
-            return identityResult;
+            return await base.CreateAsync(user);
         }
 
         /// <summary>
@@ -429,7 +423,7 @@ namespace Abp.Authorization.Users
             foreach (var userRole in user.Roles.ToList())
             {
                 var role = await RoleManager.FindByIdAsync(userRole.RoleId.ToString());
-                if (roleNames.All(roleName => role.Name != roleName))
+                if (role != null && roleNames.All(roleName => role.Name != roleName))
                 {
                     var result = await RemoveFromRoleAsync(user, role.Name);
                     if (!result.Succeeded)
@@ -523,6 +517,7 @@ namespace Abp.Authorization.Users
             }
         }
 
+        [UnitOfWork]
         public virtual async Task SetOrganizationUnitsAsync(TUser user, params long[] organizationUnitIds)
         {
             if (organizationUnitIds == null)
@@ -542,6 +537,8 @@ namespace Abp.Authorization.Users
                     await RemoveFromOrganizationUnitAsync(user, currentOu);
                 }
             }
+
+            await _unitOfWorkManager.Current.SaveChangesAsync();
 
             //Add to added OUs
             foreach (var organizationUnitId in organizationUnitIds)

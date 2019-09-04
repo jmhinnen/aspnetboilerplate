@@ -92,6 +92,11 @@ namespace Abp.Zero.EntityFrameworkCore
         public virtual DbSet<UserOrganizationUnit> UserOrganizationUnits { get; set; }
 
         /// <summary>
+        /// OrganizationUnitRoles.
+        /// </summary>
+        public virtual DbSet<OrganizationUnitRole> OrganizationUnitRoles { get; set; }
+
+        /// <summary>
         /// Notifications.
         /// </summary>
         public virtual DbSet<NotificationInfo> Notifications { get; set; }
@@ -142,6 +147,11 @@ namespace Abp.Zero.EntityFrameworkCore
                 u.HasOne(p => p.LastModifierUser)
                     .WithMany()
                     .HasForeignKey(p => p.LastModifierUserId);
+            });
+
+            modelBuilder.Entity<Setting>(b =>
+            {
+                b.HasIndex(e => new { e.TenantId, e.Name, e.UserId }).IsUnique().HasFilter(null);
             });
         }
     }
