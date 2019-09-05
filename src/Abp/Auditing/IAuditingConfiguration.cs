@@ -15,12 +15,6 @@ namespace Abp.Auditing
         bool IsEnabled { get; set; }
 
         /// <summary>
-        /// Used to save audit logs in background.
-        /// Default: false.
-        /// </summary>
-        bool RunInBackground { get; set; }
-
-        /// <summary>
         /// Set true to enable saving audit logs if current user is not logged in.
         /// Default: false.
         /// </summary>
@@ -35,5 +29,11 @@ namespace Abp.Auditing
         /// Ignored types for serialization on audit logging.
         /// </summary>
         List<Type> IgnoredTypes { get; }
+
+        /// <summary>
+        /// Used to decide whether to record return values.
+        /// Default false.
+        /// </summary>
+        bool SaveReturnValues { get; set; }
     }
 }

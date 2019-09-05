@@ -37,11 +37,21 @@ namespace Abp.EntityFrameworkCore.Tests
                         .LifestyleTransient()
                 );
             });
+
+            Configuration.IocManager.Register<IRepository<TicketListItem>, TicketListItemRepository>();
         }
 
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(typeof(EntityFrameworkCoreTestModule).GetAssembly());
+        }
+
+        public override void PostInitialize()
+        {
+            using (var context = IocManager.Resolve<BloggingDbContext>())
+            {
+                context.Database.ExecuteSqlCommand("CREATE VIEW BlogView AS SELECT Id, Name, Url FROM Blogs");
+            }
         }
 
         private static void RegisterBloggingDbContextToSqliteInMemoryDb(IIocManager iocManager)
@@ -81,7 +91,16 @@ namespace Abp.EntityFrameworkCore.Tests
             );
 
             inMemorySqlite.Open();
-            new SupportDbContext(builder.Options).Database.EnsureCreated();
+            var ctx = new SupportDbContext(builder.Options);
+            ctx.Database.EnsureCreated();
+
+            using (var command = ctx.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = SupportDbContext.TicketViewSql;
+                ctx.Database.OpenConnection();
+
+                command.ExecuteNonQuery();
+            }
         }
     }
 }
