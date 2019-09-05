@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Abp.RedisCache.InMemory</id>
+    <version>4.8.1</version>
+    <title>Abp.RedisCache.InMemory</title>
+    <authors>Cyrus Downey</authors>
+    <owners>Cyrus Downey</owners>
+    <projectUrl>https://github.com/jmhinnen/aspnetboilerplate</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Abp.RedisCache.InMemory</description>
+    <copyright>Copyright 2019</copyright>   
+  </metadata>
+  <files>
+	<file src=".\bin\Release\netstandard2.0\Abp.RedisCache.InMemory.dll" target="lib\netstandard2.0\Abp.RedisCache.InMemory.dll"/>
+  </files>
+</package>
