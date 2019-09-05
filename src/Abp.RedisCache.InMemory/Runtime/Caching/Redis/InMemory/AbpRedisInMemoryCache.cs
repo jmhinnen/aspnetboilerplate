@@ -34,7 +34,8 @@ namespace Abp.Runtime.Caching.Redis.InMemory
         {
             this.Logger.Debug($"Set|{this.Name}|{key}");
             
-            var memorySlidingExpireTime = slidingExpireTime ?? _redisCache.DefaultSlidingExpireTime.Add(new TimeSpan(0, 1, 0));
+            //Making sure the memory expires after the Redis, to give time for the redis events to be processed.
+            var memorySlidingExpireTime = slidingExpireTime?.Add(new TimeSpan(0, 1, 0)) ?? _redisCache.DefaultSlidingExpireTime.Add(new TimeSpan(0, 1, 0));
 
             _memoryCache.Set(key, value, memorySlidingExpireTime, absoluteExpireTime);
 
